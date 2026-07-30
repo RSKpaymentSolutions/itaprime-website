@@ -236,6 +236,34 @@
   .no-reply { margin-top: 16px; display: none; }
   .no-reply.show { display: block; }
 
+  /* Ambient layer: glyphs drifting around the whole page */
+  .ambient {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none; overflow: hidden;
+  }
+  .float {
+    position: absolute;
+    font-weight: 700;
+    animation: drifty var(--dur, 14s) ease-in-out infinite alternate;
+    opacity: var(--op, 0.2);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  @keyframes drifty {
+    from { transform: translate(0, 0); }
+    to   { transform: translate(var(--dx, 40px), var(--dy, -60px)); }
+  }
+  .float.blink { animation: drifty var(--dur, 14s) ease-in-out infinite alternate, blink 1.4s steps(1) infinite; }
+  .bouncer {
+    position: fixed; z-index: 0;
+    width: 26px; height: 50px;
+    background: var(--green);
+    opacity: 0.32;
+    pointer-events: none;
+    animation: blink 1.2s steps(1) infinite;
+  }
+  @media (prefers-reduced-motion: reduce) { .ambient, .bouncer { display: none; } }
+
   /* Side rails */
   .rail {
     position: fixed; top: 120px; width: 250px;
@@ -308,6 +336,9 @@
 </style>
 </head>
 <body>
+
+<div class="ambient" id="ambient" aria-hidden="true"></div>
+<div class="bouncer" id="bouncer" aria-hidden="true"></div>
 
 <div class="titlebar">
   <div class="titlebar-inner">
@@ -740,6 +771,60 @@
     favState = !favState;
     favLink.href = favState ? favOn : favOff;
   }, 800);
+  // ---------- ambient layer: drifting glyphs, ticking counters, roaming cursor ----------
+  (function () {
+    if (reduced) return;
+    var host = document.getElementById('ambient');
+    var small = window.innerWidth < 700;
+    var glyphs = ['❯', '$', '%', '+', '✳', '01', '</>', '||', '~', '{ }'];
+    var colors = ['#B8B075', '#C9A98E', '#9FAEDC', '#A8BE9B', '#C79E97'];
+    var n = small ? 7 : 16;
+    var counters = [];
+    for (var i = 0; i < n; i++) {
+      var s = document.createElement('span');
+      s.className = 'float' + (Math.random() < 0.35 ? ' blink' : '');
+      var isCounter = i % 5 === 0;
+      if (isCounter) {
+        s.textContent = '0';
+        s.dataset.val = String(Math.floor(Math.random() * 900));
+        counters.push(s);
+      } else {
+        s.textContent = glyphs[i % glyphs.length];
+      }
+      s.style.left = (3 + Math.random() * 92) + '%';
+      s.style.top = (6 + Math.random() * 86) + '%';
+      s.style.color = colors[i % colors.length];
+      s.style.fontSize = (11 + Math.random() * 14) + 'px';
+      s.style.setProperty('--dur', (9 + Math.random() * 14) + 's');
+      s.style.setProperty('--dx', (Math.random() * 160 - 80) + 'px');
+      s.style.setProperty('--dy', (Math.random() * 160 - 80) + 'px');
+      s.style.setProperty('--op', (0.13 + Math.random() * 0.17).toFixed(2));
+      host.appendChild(s);
+    }
+    // counters tick up forever, like token counts
+    setInterval(function () {
+      counters.forEach(function (c) {
+        var v = parseInt(c.dataset.val, 10) + Math.floor(1 + Math.random() * 9);
+        c.dataset.val = String(v);
+        c.textContent = v >= 10000 ? (v / 1000).toFixed(1) + 'k' : String(v);
+      });
+    }, 600);
+
+    // roaming cursor block, bounces around like a screensaver
+    var b = document.getElementById('bouncer');
+    var bx = 80 + Math.random() * 300, by = 120 + Math.random() * 300;
+    var vx = 0.55, vy = 0.42;
+    function roam() {
+      var maxX = window.innerWidth - 26, maxY = window.innerHeight - 50;
+      bx += vx; by += vy;
+      if (bx <= 0 || bx >= maxX) { vx = -vx; bx = Math.max(0, Math.min(bx, maxX)); }
+      if (by <= 0 || by >= maxY) { vy = -vy; by = Math.max(0, Math.min(by, maxY)); }
+      b.style.transform = 'translate(' + bx + 'px,' + by + 'px)';
+      requestAnimationFrame(roam);
+    }
+    requestAnimationFrame(roam);
+  })();
+
   var statuses = [
     '⏸ founder mode on · no exit clock · ← est. 2026',
     '✳ compounding in the background…',
