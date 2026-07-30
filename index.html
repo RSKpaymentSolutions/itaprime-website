@@ -144,6 +144,17 @@
     line-height: 1.02;
     letter-spacing: -0.02em;
   }
+  .banner .word {
+    background: linear-gradient(100deg, var(--ink) 0%, var(--ink) 38%, #E9B94D 50%, var(--ink) 62%, var(--ink) 100%);
+    background-size: 240% 100%;
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent; -webkit-text-fill-color: transparent;
+    animation: loadsweep 3.4s ease-in-out infinite;
+  }
+  @keyframes loadsweep {
+    from { background-position: 130% 0; }
+    to   { background-position: -130% 0; }
+  }
   .banner .block {
     display: inline-block;
     width: 0.5em; height: 0.82em;
@@ -469,7 +480,7 @@
     <div class="out">
       <div class="hero-grid">
         <div>
-          <div class="banner">ITAprime<span class="block"></span></div>
+          <div class="banner"><span class="word">ITAprime</span><span class="block"></span></div>
           <div class="kicker" data-i18n="kicker">Private Holding Company</div>
           <p class="tagline" data-i18n="tagline">We build and back companies for the long run.</p>
           <p class="plainline" data-i18n="plainline">ITAprime LLC is a private holding company. It owns and operates stakes in payments and software businesses.</p>
