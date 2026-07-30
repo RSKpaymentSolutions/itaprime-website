@@ -59,6 +59,16 @@
   }
   .dot { width: 12px; height: 12px; border-radius: 50%; }
   .dot.r { background: #E8695A; } .dot.y { background: #E9B94D; } .dot.g { background: #6FBF6A; }
+  .tlogo {
+    margin-left: 12px;
+    font-weight: 800; font-size: 14.5px;
+    letter-spacing: -0.01em; color: var(--ink);
+  }
+  .tlogo .tblock {
+    display: inline-block; width: 7px; height: 14px;
+    background: var(--green); margin-left: 3px; vertical-align: -2px;
+    animation: blink 1.2s steps(1) infinite;
+  }
   .titlebar .title {
     flex: 1; text-align: center; font-size: 12.5px; color: var(--dim);
     letter-spacing: 0.02em;
@@ -302,6 +312,7 @@
 <div class="titlebar">
   <div class="titlebar-inner">
     <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    <span class="tlogo">ITAprime<span class="tblock"></span></span>
     <span class="title">itaprime — -zsh — 80&times;24</span>
     <span class="clock" id="clock"></span>
   </div>
