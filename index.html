@@ -289,14 +289,26 @@
   /* Terminal sunset */
   .sunset {
     text-align: center;
-    font-size: 11px; line-height: 1.06;
-    margin-bottom: 38px;
+    line-height: 1.05;
     animation: glow 8s ease-in-out infinite alternate;
   }
   .sunset div { white-space: pre; }
   @keyframes glow { from { opacity: 0.82; } to { opacity: 1; } }
-  .sunset .hz { color: var(--dim); margin: 3px 0; font-size: 12px; }
+  .sunset .hz { color: var(--dim); margin: 0.2em 0; }
   .sunset .ref { opacity: 0.4; }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 48px;
+    align-items: start;
+  }
+  .hero-sunset {
+    font-size: clamp(11px, 1.5vw, 28px);
+    margin-top: 34px;
+  }
+  @media (min-width: 1750px) { .hero-sunset { margin-right: -230px; } }
+  @media (max-width: 1050px) { .hero-sunset { display: none; } }
 
   /* Bottom input bar */
   .inputbar {
@@ -390,19 +402,6 @@
 </div>
 
 <div class="rail right" aria-hidden="true">
-  <div class="sunset">
-    <div style="color:#E9B94D">██████</div>
-    <div style="color:#E9B94D">████████████</div>
-    <div style="color:#E0955B">████████████████</div>
-    <div style="color:#E0955B">██████████████████</div>
-    <div style="color:#D97E52">████████████████████</div>
-    <div style="color:#D08078">██████████████████████</div>
-    <div style="color:#C96F6F">██████████████████████</div>
-    <div class="hz">────────────────────────</div>
-    <div class="ref" style="color:#8FA3E8">░░░░░░░░░░░░░░</div>
-    <div class="ref" style="color:#8FA3E8; opacity:0.28">░░░░░░░░</div>
-    <div class="ref" style="color:#8FA3E8; opacity:0.16">░░░░</div>
-  </div>
   <div class="art">&#9492; 80&times;24 &middot; zsh &middot; est. 2026</div>
 </div>
 
@@ -417,17 +416,37 @@
       <span class="cmd"><span class="typed"></span><span class="cursor"></span></span>
     </div>
     <div class="out">
-      <div class="banner">ITAprime<span class="block"></span></div>
-      <div class="kicker">Private Holding Company</div>
-      <p class="tagline">We build and back companies for the long run.</p>
-      <div class="diff">
-        <div><span class="ln">001</span><span class="plus">+</span>a private holding company, founder led and founder run</div>
-        <div><span class="ln">002</span><span class="plus">+</span>capital and hands-on work in businesses we know</div>
-        <div><span class="ln">003</span><span class="plus">+</span>payments &middot; software &middot; commerce</div>
-      </div>
-      <div class="thinking">
-        <span class="star">&#10035;</span> <span class="word">Compounding&hellip;</span> <span class="meta">(<span id="heroSec">0</span>s &middot; holding with high conviction)</span>
-        <span class="tip">&#9492; Tip: no exit clock. That is the whole strategy.</span>
+      <div class="hero-grid">
+        <div>
+          <div class="banner">ITAprime<span class="block"></span></div>
+          <div class="kicker">Private Holding Company</div>
+          <p class="tagline">We build and back companies for the long run.</p>
+          <div class="diff">
+            <div><span class="ln">001</span><span class="plus">+</span>a private holding company, founder led and founder run</div>
+            <div><span class="ln">002</span><span class="plus">+</span>capital and hands-on work in businesses we know</div>
+            <div><span class="ln">003</span><span class="plus">+</span>payments &middot; software &middot; commerce</div>
+          </div>
+          <div class="thinking">
+            <span class="star">&#10035;</span> <span class="word">Compounding&hellip;</span> <span class="meta">(<span id="heroSec">0</span>s &middot; holding with high conviction)</span>
+            <span class="tip">&#9492; Tip: no exit clock. That is the whole strategy.</span>
+          </div>
+        </div>
+        <div class="sunset hero-sunset" aria-hidden="true">
+          <div style="color:#E9B94D">██████</div>
+          <div style="color:#E9B94D">██████████</div>
+          <div style="color:#E0955B">██████████████</div>
+          <div style="color:#E0955B">████████████████</div>
+          <div style="color:#D97E52">██████████████████</div>
+          <div style="color:#D97E52">████████████████████</div>
+          <div style="color:#D08078">██████████████████████</div>
+          <div style="color:#D08078">██████████████████████</div>
+          <div style="color:#C96F6F">████████████████████████</div>
+          <div style="color:#C96F6F">████████████████████████</div>
+          <div class="hz">──────────────────────────</div>
+          <div class="ref" style="color:#8FA3E8">░░░░░░░░░░░░░░░░</div>
+          <div class="ref" style="color:#8FA3E8; opacity:0.28">░░░░░░░░░░</div>
+          <div class="ref" style="color:#8FA3E8; opacity:0.16">░░░░░░</div>
+        </div>
       </div>
     </div>
   </div>
@@ -483,19 +502,9 @@
           <td>president, co-founder</td>
         </tr>
       </table>
-      <p>Senco is a smarter way to process payments. It gets hard-to-approve online brands live on card processing with lower fees, then gives them Senco 360, an operating system that connects their store, marketing, and finance data into one screen. ITAprime is a founding shareholder and holds the President and Co-Founder seat.</p>
-      <p><a href="https://www.senco.ai" target="_blank" rel="noopener">www.senco.ai &rarr;</a></p>
+      <p>A smarter way to process payments. <a href="https://www.senco.ai" target="_blank" rel="noopener">www.senco.ai &rarr;</a></p>
 
-      <div class="meter">
-        <div class="mlabel">Long-term conviction</div>
-        <div class="mrow">
-          <div class="track"><div class="fill" data-to="100"></div></div>
-          <div class="pct"><span class="counter" data-target="100">0</span>% used</div>
-        </div>
-        <div class="mnote">Resets: never</div>
-      </div>
-
-      <div class="queued"><span class="spinner" id="spin">&#10251;</span> New ventures and investments in software and commerce are in development&hellip;</div>
+      <div class="queued"><span class="spinner" id="spin">&#10251;</span> More in development&hellip;</div>
     </div>
   </div>
 
