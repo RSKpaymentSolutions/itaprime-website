@@ -286,6 +286,18 @@
   @keyframes grow { from { width: 22%; } to { width: 86%; } }
   .rail .starpulse { display: inline-block; animation: pulse 1.6s ease-in-out infinite; }
 
+  /* Terminal sunset */
+  .sunset {
+    text-align: center;
+    font-size: 11px; line-height: 1.06;
+    margin-bottom: 38px;
+    animation: glow 8s ease-in-out infinite alternate;
+  }
+  .sunset div { white-space: pre; }
+  @keyframes glow { from { opacity: 0.82; } to { opacity: 1; } }
+  .sunset .hz { color: var(--dim); margin: 3px 0; font-size: 12px; }
+  .sunset .ref { opacity: 0.4; }
+
   /* Bottom input bar */
   .inputbar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
@@ -371,10 +383,6 @@
     <span class="dim">Ship something real</span>
   </div>
   <div class="art">
-    &#9205; Made <b>1</b> company live, ran <b>2</b> shell companies<br>
-    &#9083; 1220 lines added, 43 lines removed
-  </div>
-  <div class="art">
     Conviction
     <div class="minitrack"><div class="minifill"></div></div>
     <span class="dim">resets: never</span>
@@ -382,21 +390,18 @@
 </div>
 
 <div class="rail right" aria-hidden="true">
-  <div class="art obox">
-    Do you want to build?<br>
-    <span class="lbl">&#10095; 1. Yes</span><br>
-    &nbsp;&nbsp;2. Yes, later
-  </div>
-  <div class="art">
-    <span class="grn starpulse">&#10035;</span> Running&hellip; payments, software, commerce
-  </div>
-  <div class="art">
-    Favorite asset: <span class="org">equity</span><br>
-    Longest session: <span class="org">&infin;</span><br>
-    Current streak: <span class="org">every day</span>
-  </div>
-  <div class="art">
-    <span class="blu">You've read ~99x more statements than Anna Karenina.</span>
+  <div class="sunset">
+    <div style="color:#E9B94D">██████</div>
+    <div style="color:#E9B94D">████████████</div>
+    <div style="color:#E0955B">████████████████</div>
+    <div style="color:#E0955B">██████████████████</div>
+    <div style="color:#D97E52">████████████████████</div>
+    <div style="color:#D08078">██████████████████████</div>
+    <div style="color:#C96F6F">██████████████████████</div>
+    <div class="hz">────────────────────────</div>
+    <div class="ref" style="color:#8FA3E8">░░░░░░░░░░░░░░</div>
+    <div class="ref" style="color:#8FA3E8; opacity:0.28">░░░░░░░░</div>
+    <div class="ref" style="color:#8FA3E8; opacity:0.16">░░░░</div>
   </div>
   <div class="art">&#9492; 80&times;24 &middot; zsh &middot; est. 2026</div>
 </div>
@@ -478,7 +483,7 @@
           <td>president, co-founder</td>
         </tr>
       </table>
-      <p>Senco is a smarter way to process payments. It gets hard-to-approve online brands live on card processing with lower fees, then gives them Senco 360, an AI operating system that connects their store, marketing, and finance data into one screen. ITAprime is a founding shareholder and holds the President and Co-Founder seat.</p>
+      <p>Senco is a smarter way to process payments. It gets hard-to-approve online brands live on card processing with lower fees, then gives them Senco 360, an operating system that connects their store, marketing, and finance data into one screen. ITAprime is a founding shareholder and holds the President and Co-Founder seat.</p>
       <p><a href="https://www.senco.ai" target="_blank" rel="noopener">www.senco.ai &rarr;</a></p>
 
       <div class="meter">
@@ -487,8 +492,7 @@
           <div class="track"><div class="fill" data-to="100"></div></div>
           <div class="pct"><span class="counter" data-target="100">0</span>% used</div>
         </div>
-        <div class="mnote">Resets: never (America/Los_Angeles)</div>
-        <div class="promo">+50% focus when everyone else is distracted &middot; always on</div>
+        <div class="mnote">Resets: never</div>
       </div>
 
       <div class="queued"><span class="spinner" id="spin">&#10251;</span> New ventures and investments in software and commerce are in development&hellip;</div>
@@ -513,13 +517,10 @@
       <div class="statgrid">
         <div>Companies live: <span class="num counter" data-target="1">0</span></div>
         <div>Exit clock: <span class="num">none</span></div>
-        <div>Active days: <span class="num counter" data-target="365">0</span>/365</div>
         <div>Longest hold: <span class="num">&infin;</span></div>
-        <div>Favorite model: <span class="num">ownership</span></div>
         <div>Current streak: <span class="num">every day</span></div>
       </div>
-      <p class="quip">This page has shipped ~99x more than it has talked.</p>
-      <div class="statusline statusline-after">&darr; stats &middot; r to cycle dates &middot; nothing here is for sale</div>
+      <div class="statusline statusline-after">&#9492; nothing here is for sale</div>
     </div>
   </div>
 
