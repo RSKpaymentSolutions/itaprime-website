@@ -628,6 +628,7 @@
         </div>
         <div class="dialog-hint" data-i18n="hint">Press 1 or 2 &middot; or just write to <a href="mailto:rm@itaprime.com">rm@itaprime.com</a></div>
         <div class="no-reply" id="noReply"><span class="dim" data-i18n="noreply">Fair enough. We will keep building.</span></div>
+        <div class="no-reply" id="yesNote"><span class="dim" data-i18n="yesnote">&#10003; Address copied. If no email window opened, paste rm@itaprime.com into any email app.</span></div>
       </div>
     </div>
   </div>
@@ -807,11 +808,29 @@
   var yes = document.getElementById('optYes');
   var no = document.getElementById('optNo');
   var noReply = document.getElementById('noReply');
+  var yesNote = document.getElementById('yesNote');
+  function copyEmail() {
+    try { navigator.clipboard.writeText(EMAIL); } catch (e) {}
+    var sb = document.getElementById('statusbar');
+    sb.textContent = LANG === 'it'
+      ? '✓ rm@itaprime.com copiato — incollalo dove vuoi'
+      : '✓ rm@itaprime.com copied — paste it anywhere';
+  }
+  document.querySelectorAll('a[href^="mailto:"]').forEach(function (a) {
+    a.addEventListener('click', copyEmail);
+  });
   function pick(which) {
     yes.classList.toggle('active', which === 1);
     no.classList.toggle('active', which === 2);
-    if (which === 1) { window.location.href = 'mailto:' + EMAIL; }
-    else { noReply.classList.add('show'); }
+    if (which === 1) {
+      copyEmail();
+      noReply.classList.remove('show');
+      yesNote.classList.add('show');
+      window.location.href = 'mailto:' + EMAIL;
+    } else {
+      yesNote.classList.remove('show');
+      noReply.classList.add('show');
+    }
   }
   yes.addEventListener('click', function () { pick(1); });
   no.addEventListener('click', function () { pick(2); });
@@ -961,6 +980,7 @@
     'no-n': '2. Non ancora', 'no-d': '&mdash; continua pure a guardare',
     hint: 'Premi 1 o 2 &middot; oppure scrivi a <a href="mailto:rm@itaprime.com">rm@itaprime.com</a>',
     noreply: 'Va bene. Noi continuiamo a costruire.',
+    yesnote: '&#10003; Indirizzo copiato. Se non si &egrave; aperta una mail, incolla rm@itaprime.com dove preferisci.',
     footer: 'ITAprime LLC &middot; &copy; 2026 &middot; Tutti i diritti riservati.'
   };
   var EN = {};
