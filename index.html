@@ -97,10 +97,12 @@
   }
   .titlebar .clock { font-size: 12.5px; color: var(--dim); font-variant-numeric: tabular-nums; }
   .langbtn {
-    font-size: 12.5px; font-weight: 700; color: var(--blue);
-    margin-right: 16px; border: none; white-space: nowrap;
+    font-size: 12px; font-weight: 700; color: var(--blue);
+    margin-right: 14px; white-space: nowrap;
+    border: 1px solid var(--hairline); border-radius: 3px;
+    padding: 1px 8px;
   }
-  .langbtn:hover { background: #AECBFA; color: #14140F; border: none; }
+  .langbtn:hover { background: #AECBFA; color: #14140F; border-color: #AECBFA; }
   .themebtn { font-size: 16px; color: var(--dim); border: none; margin-right: 14px; }
   .themebtn:hover { color: var(--ink); border: none; }
 
@@ -150,6 +152,7 @@
     animation: blink 1.2s steps(1) infinite;
   }
   .tagline { margin-top: 24px; font-size: 17px; max-width: 58ch; }
+  .plainline { margin-top: 12px; font-size: 15px; color: var(--dim); max-width: 62ch; }
   .comment { color: var(--dim); }
 
   /* Navy diff block, straight from the terminal */
@@ -415,7 +418,7 @@
     <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
     <span class="tlogo">ITAprime<span class="tblock"></span></span>
     <span class="title">itaprime — -zsh — 80&times;24</span>
-    <a href="#" id="langBtn" class="langbtn">traduci in italiano</a>
+    <a href="#" id="langBtn" class="langbtn" title="traduci in italiano">IT</a>
     <a href="#" id="themeBtn" class="themebtn" title="night mode">&#9790;</a>
     <span class="clock" id="clock"></span>
   </div>
@@ -469,6 +472,7 @@
           <div class="banner">ITAprime<span class="block"></span></div>
           <div class="kicker" data-i18n="kicker">Private Holding Company</div>
           <p class="tagline" data-i18n="tagline">We build and back companies for the long run.</p>
+          <p class="plainline" data-i18n="plainline">ITAprime LLC is a private holding company. It owns and operates stakes in payments and software businesses.</p>
           <div class="diff">
             <div><span class="ln">001</span><span class="plus">+</span><span data-i18n="diff1">a private holding company, founder led and founder run</span></div>
             <div><span class="ln">002</span><span class="plus">+</span><span data-i18n="diff2">capital and hands-on work in businesses we know</span></div>
@@ -530,7 +534,6 @@
               <span class="val" data-i18n="v-hold">We concentrate, stay close to the work, and let compounding do its job.</span>
             </div>
           </div>
-          <div class="statusline statusline-after" data-i18n="principles">Made <b>3</b> principles, took <b>0</b> shortcuts</div>
         </div>
         <div class="sunset hero-sunset night" aria-hidden="true">
           <div>   <span class="tw" style="color:#B8B075">&middot;</span>            <span class="tw" style="color:#8FA3E8; animation-delay:0.8s">&#10038;</span>   </div>
@@ -590,10 +593,9 @@
         <div class="legend" data-i18n="legend">Less <span class="l1">&#9617;</span> <span class="l2">&#9618;</span> <span class="l3">&#9619;</span> More &middot; work compounds left to right</div>
       </div>
       <div class="statgrid">
-        <div data-i18n="stat1">Companies live: <span class="num counter" data-target="1">0</span></div>
+        <div data-i18n="stat1">Companies live: <span class="num">1</span></div>
         <div data-i18n="stat2">Exit clock: <span class="num">none</span></div>
         <div data-i18n="stat3">Longest hold: <span class="num">&infin;</span></div>
-        <div data-i18n="stat4">Current streak: <span class="num">every day</span></div>
       </div>
       <div class="statusline statusline-after" data-i18n="notforsale">&#9492; nothing here is for sale</div>
         </div>
@@ -942,7 +944,7 @@
     'v-build': 'Fondiamo e gestiamo aziende dal primo giorno, con vera pelle in gioco.',
     'v-back': 'Investiamo in fondatori che risolvono problemi difficili e poco glamour, in mercati che conosciamo.',
     'v-hold': 'Ci concentriamo, restiamo vicini al lavoro e lasciamo fare all\'interesse composto.',
-    principles: 'Fatti <b>3</b> principi, prese <b>0</b> scorciatoie',
+    plainline: 'ITAprime LLC &egrave; una holding privata. Possiede e gestisce partecipazioni in aziende di pagamenti e software.',
     'th-name': 'Nome', 'th-position': 'Posizione', 'th-role': 'Ruolo',
     'td-position': 'socio fondatore', 'td-role': 'co-fondatore',
     'senco-line': 'Un modo pi&ugrave; intelligente di processare i pagamenti.',
@@ -951,7 +953,6 @@
     stat1: 'Aziende attive: <span class="num">1</span>',
     stat2: 'Scadenza: <span class="num">nessuna</span>',
     stat3: 'Detenzione pi&ugrave; lunga: <span class="num">&infin;</span>',
-    stat4: 'Serie attuale: <span class="num">ogni giorno</span>',
     notforsale: '&#9492; niente qui &egrave; in vendita',
     clabel: '&#9492; in alto e a destra',
     'contact-q1': 'Stai costruendo qualcosa? Anche noi.',
@@ -981,7 +982,7 @@
       : 'Type a message and press Enter — it goes straight to rm@itaprime.com';
     statuses = l === 'it' ? statusesIT : statusesEN;
     document.getElementById('statusbar').textContent = statuses[si % statuses.length];
-    document.getElementById('langBtn').textContent = l === 'it' ? 'switch to English' : 'traduci in italiano';
+    document.getElementById('langBtn').textContent = l === 'it' ? 'EN' : 'IT';
   }
   document.getElementById('langBtn').addEventListener('click', function (e) {
     e.preventDefault();
