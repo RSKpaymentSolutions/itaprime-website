@@ -401,6 +401,27 @@
 
   footer { margin-top: 70px; color: var(--dim); font-size: 12.5px; }
 
+  /* Chat transcript, sits above the input bar */
+  .chatpanel { display: none; border-bottom: 1px solid #3A3A2C; }
+  .chatpanel.open { display: block; }
+  .chathead {
+    max-width: 1100px; margin: 0 auto; padding: 12px 32px 2px;
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 12px; color: #8B8968;
+  }
+  .chathead a { color: #8B8968; border: none; }
+  .chathead a:hover { color: var(--bar-text); border: none; }
+  .chatlog {
+    max-width: 1100px; margin: 0 auto; padding: 6px 32px 14px;
+    max-height: 42vh; overflow-y: auto;
+  }
+  .chatline { display: flex; gap: 12px; align-items: baseline; padding: 5px 0; font-size: 14px; line-height: 1.7; }
+  .chatline .who { flex-shrink: 0; font-weight: 700; }
+  .chatline.u .who { color: #8FA3E8; }
+  .chatline.a .who { color: var(--orange); }
+  .chatline .txt { white-space: pre-wrap; color: var(--bar-text); }
+  .chatline.u .txt { color: #F7F1C4; }
+
   @media (max-width: 640px) {
     .tree .key { width: 60px; }
     .ptable th:nth-child(3), .ptable td:nth-child(3) { display: none; }
@@ -651,9 +672,16 @@
 
 <!-- Bottom input bar -->
 <div class="inputbar">
+  <div class="chatpanel" id="chatPanel">
+    <div class="chathead">
+      <span id="chatTitle" data-i18n="chat-title">itaprime assistant &middot; ask anything</span>
+      <a href="#" id="chatClose" data-i18n="chat-close">close &#10005;</a>
+    </div>
+    <div class="chatlog" id="chatLog"></div>
+  </div>
   <div class="inputbar-inner">
     <span class="chev">&#10095;</span>
-    <input id="msg" type="text" placeholder='Type a message and press Enter — it goes straight to rm@itaprime.com' autocomplete="off">
+    <input id="msg" type="text" placeholder="Ask anything about ITAprime, then press Enter" autocomplete="off">
   </div>
   <div class="statusbar" id="statusbar">&#9208; founder mode on &middot; no exit clock &middot; &larr; est. 2026</div>
 </div>
@@ -852,17 +880,87 @@
     if (e.key === '2') pick(2);
   });
 
-  // ---------- bottom bar ----------
+  // ---------- bottom bar: the assistant ----------
+  var CHAT_URL = 'https://dbhskwlhxftkwcwamuji.supabase.co/functions/v1/itaprime-chat';
+  var CHAT_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRiaHNrd2xoeGZ0a3djd2FtdWppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1Mjk0MzAsImV4cCI6MjA5NDEwNTQzMH0.9f5fJ89jPqwbHGbe-5xQTHPwausCNMdws8LxU5I00dc';
+  var chatHistory = [];
+  var chatBusy = false;
+  var chatPanel = document.getElementById('chatPanel');
+  var chatLog = document.getElementById('chatLog');
+
+  function chatLine(role, text) {
+    var d = document.createElement('div');
+    d.className = 'chatline ' + (role === 'user' ? 'u' : 'a');
+    var w = document.createElement('span');
+    w.className = 'who';
+    w.textContent = role === 'user' ? '❯' : '✳';
+    var t = document.createElement('span');
+    t.className = 'txt';
+    t.textContent = text;
+    d.appendChild(w); d.appendChild(t);
+    chatLog.appendChild(d);
+    chatLog.scrollTop = chatLog.scrollHeight;
+    return t;
+  }
+
+  function askChat(question) {
+    if (chatBusy) return;
+    chatBusy = true;
+    chatPanel.classList.add('open');
+    chatLine('user', question);
+    chatHistory.push({ role: 'user', content: question });
+
+    var slot = chatLine('assistant', '⠿');
+    var sf = 0;
+    var spin = setInterval(function () {
+      slot.textContent = frames[sf = (sf + 1) % frames.length];
+    }, 90);
+
+    var done = function (text) {
+      clearInterval(spin);
+      slot.textContent = text;
+      chatHistory.push({ role: 'assistant', content: text });
+      if (chatHistory.length > 12) chatHistory = chatHistory.slice(-12);
+      chatLog.scrollTop = chatLog.scrollHeight;
+      chatBusy = false;
+    };
+
+    fetch(CHAT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + CHAT_KEY },
+      body: JSON.stringify({ messages: chatHistory })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        done(d && d.reply ? d.reply : (LANG === 'it'
+          ? 'Non sono riuscito a rispondere. Scrivi a ' + EMAIL + '.'
+          : 'I could not answer that one. Write to ' + EMAIL + '.'));
+      })
+      .catch(function () {
+        done(LANG === 'it'
+          ? 'Connessione non riuscita. Scrivi a ' + EMAIL + ' e Raffaele ti risponde direttamente.'
+          : 'I could not reach the server. Write to ' + EMAIL + ' and Raffaele will answer directly.');
+      });
+  }
+
+  document.getElementById('chatClose').addEventListener('click', function (e) {
+    e.preventDefault();
+    chatPanel.classList.remove('open');
+  });
+
   document.getElementById('msg').addEventListener('keydown', function (e) {
     if (e.key !== 'Enter') return;
     var v = this.value.trim();
     if (!v) return;
+    this.value = '';
     if (v.toLowerCase() === 'help') {
-      document.getElementById('statusbar').textContent = 'commands: 1 = say hello · 2 = keep browsing · anything else emails us';
-      this.value = '';
+      document.getElementById('statusbar').textContent = LANG === 'it'
+        ? 'scrivi una domanda e premi Invio · oppure scrivi a ' + EMAIL
+        : 'type a question and press Enter · or write to ' + EMAIL;
       return;
     }
-    window.location.href = 'mailto:' + EMAIL + '?subject=' + encodeURIComponent(v);
+    if (v.toLowerCase() === 'email') { window.location.href = 'mailto:' + EMAIL; return; }
+    askChat(v);
   });
 
   // ---------- scrollspy for the tab bar ----------
@@ -943,12 +1041,12 @@
   var statusesEN = [
     '⏸ founder mode on · no exit clock · ← est. 2026',
     '✳ compounding in the background…',
-    'tip: press 1 to say hello · tip: the long run is undefeated'
+    'tip: ask the assistant anything in the bar below · the long run is undefeated'
   ];
   var statusesIT = [
     '⏸ modalità fondatore attiva · nessuna scadenza · ← dal 2026',
     '✳ capitalizzando in sottofondo…',
-    'suggerimento: premi 1 per salutarci · il lungo periodo è imbattuto'
+    'suggerimento: chiedi quello che vuoi all\'assistente qui sotto · il lungo periodo è imbattuto'
   ];
   var statuses = statusesEN;
   var si = 0;
@@ -994,7 +1092,9 @@
     hint: 'Premi 1 o 2 &middot; oppure scrivi a <a href="mailto:rm@itaprime.com">rm@itaprime.com</a>',
     noreply: 'Va bene. Noi continuiamo a costruire.',
     yesnote: '&#10003; Indirizzo copiato. Se non si &egrave; aperta una mail, incolla rm@itaprime.com dove preferisci.',
-    footer: 'ITAprime LLC &middot; &copy; 2026 &middot; Tutti i diritti riservati.'
+    footer: 'ITAprime LLC &middot; &copy; 2026 &middot; Tutti i diritti riservati.',
+    'chat-title': 'assistente itaprime &middot; chiedi quello che vuoi',
+    'chat-close': 'chiudi &#10005;'
   };
   var EN = {};
   var LANG = 'en';
@@ -1011,8 +1111,8 @@
     });
     var msg = document.getElementById('msg');
     msg.placeholder = l === 'it'
-      ? 'Scrivi un messaggio e premi Invio — arriva dritto a rm@itaprime.com'
-      : 'Type a message and press Enter — it goes straight to rm@itaprime.com';
+      ? 'Chiedi quello che vuoi su ITAprime, poi premi Invio'
+      : 'Ask anything about ITAprime, then press Enter';
     statuses = l === 'it' ? statusesIT : statusesEN;
     document.getElementById('statusbar').textContent = statuses[si % statuses.length];
     document.getElementById('langBtn').textContent = l === 'it' ? 'EN' : 'IT';
