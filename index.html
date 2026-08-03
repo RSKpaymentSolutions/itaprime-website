@@ -381,6 +381,13 @@
     display: flex; gap: 12px; align-items: center;
   }
   .inputbar .chev { color: #8FA3E8; font-weight: 700; }
+  .aitag {
+    color: var(--orange); font-weight: 700; font-size: 12px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .aitag .st { display: inline-block; animation: pulse 1.6s ease-in-out infinite; }
+  @media (max-width: 640px) { .aitag { display: none; } }
   .inputbar input {
     flex: 1; background: transparent; border: none; outline: none;
     color: var(--bar-text);
@@ -680,10 +687,11 @@
     <div class="chatlog" id="chatLog"></div>
   </div>
   <div class="inputbar-inner">
+    <span class="aitag"><span class="st">&#10035;</span> <span data-i18n="ai-tag">ask ai</span></span>
     <span class="chev">&#10095;</span>
     <input id="msg" type="text" placeholder="Ask anything about ITAprime, then press Enter" autocomplete="off">
   </div>
-  <div class="statusbar" id="statusbar">&#9208; founder mode on &middot; no exit clock &middot; &larr; est. 2026</div>
+  <div class="statusbar" id="statusbar">&#10035; ask the assistant anything &middot; founder mode on &middot; no exit clock</div>
 </div>
 
 <script>
@@ -948,6 +956,19 @@
     chatPanel.classList.remove('open');
   });
 
+  // Say hello the first time someone touches the bar, so the chat is visibly there
+  var greeted = false;
+  function greet() {
+    if (greeted) return;
+    greeted = true;
+    chatPanel.classList.add('open');
+    chatLine('assistant', LANG === 'it'
+      ? 'Ciao. Chiedimi quello che vuoi su ITAprime: cosa facciamo, il portafoglio, dove investiamo. Rispondo io.'
+      : 'Hi. Ask me anything about ITAprime: what we do, the portfolio, where we invest. I will answer right here.');
+  }
+  document.getElementById('msg').addEventListener('focus', greet);
+  document.getElementById('msg').addEventListener('click', greet);
+
   document.getElementById('msg').addEventListener('keydown', function (e) {
     if (e.key !== 'Enter') return;
     var v = this.value.trim();
@@ -1094,7 +1115,8 @@
     yesnote: '&#10003; Indirizzo copiato. Se non si &egrave; aperta una mail, incolla rm@itaprime.com dove preferisci.',
     footer: 'ITAprime LLC &middot; &copy; 2026 &middot; Tutti i diritti riservati.',
     'chat-title': 'assistente itaprime &middot; chiedi quello che vuoi',
-    'chat-close': 'chiudi &#10005;'
+    'chat-close': 'chiudi &#10005;',
+    'ai-tag': 'chiedi all\'ai'
   };
   var EN = {};
   var LANG = 'en';
