@@ -439,19 +439,32 @@
   }
 
   /* Chat transcript, sits above the input bar */
-  .chatpanel { display: none; border-bottom: 1px solid #3A3A2C; }
-  .chatpanel.open { display: block; }
+  .chatpanel {
+    height: 0; overflow: hidden;
+    display: flex; flex-direction: column;
+    border-bottom: 1px solid transparent;
+    transition: height 0.34s cubic-bezier(0.22,1,0.36,1), border-color 0.34s ease;
+  }
+  .chatpanel.open {
+    height: max(200px, calc(60vh - 84px));
+    border-bottom-color: #3A3A2C;
+  }
   .chathead {
-    max-width: 1100px; margin: 0 auto; padding: 12px 32px 2px;
+    flex-shrink: 0;
+    width: 100%; max-width: 1100px; margin: 0 auto; padding: 14px 32px 2px;
     display: flex; justify-content: space-between; align-items: baseline;
     font-size: 12px; color: #8B8968;
   }
   .chathead a { color: #8B8968; border: none; }
   .chathead a:hover { color: var(--bar-text); border: none; }
   .chatlog {
-    max-width: 1100px; margin: 0 auto; padding: 6px 32px 14px;
-    max-height: 42vh; overflow-y: auto;
+    flex: 1; min-height: 0;
+    width: 100%; max-width: 1100px; margin: 0 auto; padding: 8px 32px 14px;
+    overflow-y: auto;
+    display: flex; flex-direction: column;
   }
+  .chatlog .chatline:first-child { margin-top: auto; }
+  @media (prefers-reduced-motion: reduce) { .chatpanel { transition: none; } }
   .chatline { display: flex; gap: 12px; align-items: baseline; padding: 5px 0; font-size: 14px; line-height: 1.7; }
   .chatline .who { flex-shrink: 0; font-weight: 700; }
   .chatline.u .who { color: #8FA3E8; }
